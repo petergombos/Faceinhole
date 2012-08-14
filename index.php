@@ -10,6 +10,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css" type="text/css" media="all" />
 
+
+    <script src="js/pixastic.custom.js" type="text/javascript"></script>
+
     <script src="js/draggable_patch.js"></script>
     <script src="js/json2.js"></script>
     <script src="js/jqueryrotate.js"></script>
@@ -64,6 +67,7 @@
     <div id="tools">
         <div id="angle"></div>
         <div id="size"></div>
+        <button id="fliph" onClick="ImgEditor.fliph()">Flip Horizontal</button>
     </div>
 
 

@@ -35,8 +35,8 @@ $(document).ready(function(){
 */
 
 var ImgEditor = {
-	images : new Array(),
-	selectedIndex : new Array(),
+	images : [],
+	selectedIndex : [],
 	maxZindex : 1,
 	isIE : function(){
 		var supportedCSS,styles=document.getElementsByTagName("head")[0].style,toCheck="transformProperty WebkitTransform OTransform msTransform MozTransform".split(" ");
@@ -58,8 +58,7 @@ var ImgEditor = {
 			
 			ImgEditor.selectedIndex.push(0,0);
 			
-			$("#" + ImgEditor.settings.editor + " img").draggable({ 
-				//containment: "parent", 
+			$("#" + ImgEditor.settings.editor + " img").draggable({
 				cursor: "move",
 				snap : true,
 				start : function(){
@@ -80,16 +79,17 @@ var ImgEditor = {
 				$(Img).load(function(){
 					$(this).attr('id','pic_' + ImgEditor.i);
 				
-					var data = { 
+					var data = {
 						id :  'pic_' + ImgEditor.i,
-						height :  this.height, 
+						height :  this.height,
 						width : this.width,
 						src : this.src,
 						top : Math.ceil($('#pic_' + ImgEditor.i).position().top) + 'px',
 						left : Math.ceil($('#pic_' + ImgEditor.i).position().left) + 'px',
 						angle : 0,
 						size: 100,
-						zIndex : 1
+						zIndex : 1,
+						filph : false
 					};
 					
 					ImgEditor.images.push( data );
@@ -105,21 +105,21 @@ var ImgEditor = {
 			ImgEditor.selectedIndex[1] = ImgEditor.i;
 			
 			$("#" + ImgEditor.settings.editor + " img").bind('mouseup click',function(){
-				 ImgEditor.selectedId = $(this).attr('id');
-				 ImgEditor.selectedIndex = ImgEditor.selectedId.split("_");
-				 $("#size").slider({value: ImgEditor.images[ImgEditor.selectedIndex[1]].size});
-				 $("#angle").slider({value: ImgEditor.images[ImgEditor.selectedIndex[1]].angle}); 
-				 
-				 ImgEditor.images[ImgEditor.selectedIndex[1]].zIndex = ImgEditor.maxZindex++;
-				 this.style.zIndex = ImgEditor.images[ImgEditor.selectedIndex[1]].zIndex;
-				 
+				ImgEditor.selectedId = $(this).attr('id');
+				ImgEditor.selectedIndex = ImgEditor.selectedId.split("_");
+				$("#size").slider({value: ImgEditor.images[ImgEditor.selectedIndex[1]].size});
+				$("#angle").slider({value: ImgEditor.images[ImgEditor.selectedIndex[1]].angle});
+				
+				ImgEditor.images[ImgEditor.selectedIndex[1]].zIndex = ImgEditor.maxZindex++;
+				this.style.zIndex = ImgEditor.images[ImgEditor.selectedIndex[1]].zIndex;
+				
 			});
 		},
 		tools : function(){
 			//FIXING IE BUG / when slider is inside a draggable element //TODO dynamic toolbar
 			$('#tools').mousedown(function(e) {
 				if($.browser.msie) {
-					 e.stopPropagation();
+					e.stopPropagation();
 				}
 			});
 
@@ -142,11 +142,10 @@ var ImgEditor = {
 					var angle = $(this).slider("value");
 					ImgEditor.rotate(angle);
 
-					ImgEditor.images[ImgEditor.selectedIndex[1]].angle = $(this).slider("value");		
+					ImgEditor.images[ImgEditor.selectedIndex[1]].angle = $(this).slider("value");
 				
 					if(ImgEditor.isIE()){
-						$('#' + ImgEditor.selectedId).draggable({ 
-							//containment: "parent", 
+						$('#' + ImgEditor.selectedId).draggable({
 							stop : function() {
 								ImgEditor.images[ImgEditor.selectedIndex[1]].top = Math.ceil($('#' + ImgEditor.selectedId).position().top) + 'px';
 								ImgEditor.images[ImgEditor.selectedIndex[1]].left = Math.ceil($('#' + ImgEditor.selectedId).position().left) + 'px';
@@ -191,8 +190,7 @@ var ImgEditor = {
 					ImgEditor.images[ImgEditor.selectedIndex[1]].size = $(this).slider("value");
 
 					if(ImgEditor.isIE()){
-						$('#' + ImgEditor.selectedId).draggable({ 
-							//containment: "parent", 
+						$('#' + ImgEditor.selectedId).draggable({
 							stop : function() {
 								ImgEditor.images[ImgEditor.selectedIndex[1]].top = Math.ceil($('#' + ImgEditor.selectedId).position().top) + 'px';
 								ImgEditor.images[ImgEditor.selectedIndex[1]].left = Math.ceil($('#' + ImgEditor.selectedId).position().left) + 'px';
@@ -243,13 +241,13 @@ var ImgEditor = {
 		
 		$("#" + ImgEditor.selectedId).unbind('mouseup');
 		$("#" + ImgEditor.selectedId).bind('mouseup click',function(){
-				 ImgEditor.selectedId = $(this).attr('id');
-				 ImgEditor.selectedIndex = ImgEditor.selectedId.split("_");
-				 $("#size").slider({value: ImgEditor.images[ImgEditor.selectedIndex[1]].size});
-				 $("#angle").slider({value: ImgEditor.images[ImgEditor.selectedIndex[1]].angle});
-				 
-				 ImgEditor.images[ImgEditor.selectedIndex[1]].zIndex = ImgEditor.maxZindex++;
-				 this.style.zIndex = ImgEditor.images[ImgEditor.selectedIndex[1]].zIndex;
+				ImgEditor.selectedId = $(this).attr('id');
+				ImgEditor.selectedIndex = ImgEditor.selectedId.split("_");
+				$("#size").slider({value: ImgEditor.images[ImgEditor.selectedIndex[1]].size});
+				$("#angle").slider({value: ImgEditor.images[ImgEditor.selectedIndex[1]].angle});
+
+				ImgEditor.images[ImgEditor.selectedIndex[1]].zIndex = ImgEditor.maxZindex++;
+				this.style.zIndex = ImgEditor.images[ImgEditor.selectedIndex[1]].zIndex;
 		});
 		
 		var selector = '';
@@ -268,21 +266,21 @@ var ImgEditor = {
 		$('#' +  ImgEditor.settings.editor).bind('mouseleave',function(){
 			$(selector).removeClass('transparent');
 		});
-				 
+
 	},
 	reRender: function(){
 		
 		$('#' + ImgEditor.selectedId).remove();
 		
 		var new_img = new Image();
-		new_img.src = ImgEditor.images[ImgEditor.selectedIndex[1]].src; 
-		new_img.id = ImgEditor.images[ImgEditor.selectedIndex[1]].id; 
-		new_img.style.top = ImgEditor.images[ImgEditor.selectedIndex[1]].top; 
+		new_img.src = ImgEditor.images[ImgEditor.selectedIndex[1]].src;
+		new_img.id = ImgEditor.images[ImgEditor.selectedIndex[1]].id;
+		new_img.style.top = ImgEditor.images[ImgEditor.selectedIndex[1]].top;
 		new_img.style.left = ImgEditor.images[ImgEditor.selectedIndex[1]].left;
-		new_img.style.position = 'absolute'; 
-		new_img.style.zIndex =  ImgEditor.images[ImgEditor.selectedIndex[1]].zIndex;  
-		new_img.width = parseInt(ImgEditor.images[ImgEditor.selectedIndex[1]].width * ($('#size').slider("value") / 100));
-		new_img.height = parseInt(ImgEditor.images[ImgEditor.selectedIndex[1]].height * ($('#size').slider("value") / 100)); 
+		new_img.style.position = 'absolute';
+		new_img.style.zIndex =  ImgEditor.images[ImgEditor.selectedIndex[1]].zIndex;
+		new_img.width = Math.ceil(ImgEditor.images[ImgEditor.selectedIndex[1]].width * ($('#size').slider("value") / 100));
+		new_img.height = Math.ceil(ImgEditor.images[ImgEditor.selectedIndex[1]].height * ($('#size').slider("value") / 100));
 		
 		$('#' + ImgEditor.settings.editor).append(new_img);
 		
@@ -290,23 +288,38 @@ var ImgEditor = {
 			
 	},
 	rotate : function(angle){
-		$('#' + ImgEditor.selectedId).rotate(parseInt(angle));
+		$('#' + ImgEditor.selectedId).rotate(Math.ceil(angle));
 	},
 	resize : function(percent){
 		
-		var height = parseInt(ImgEditor.images[ImgEditor.selectedIndex[1]].height * (percent / 100));
-		var width = parseInt(ImgEditor.images[ImgEditor.selectedIndex[1]].width * (percent / 100));
+		var height = Math.ceil(ImgEditor.images[ImgEditor.selectedIndex[1]].height * (percent / 100));
+		var width = Math.ceil(ImgEditor.images[ImgEditor.selectedIndex[1]].width * (percent / 100));
 		
 		$('#'+ ImgEditor.selectedId ).css({
 			'height' : height,
 			'width'  : width
- 		});
+		});
 		
+	},
+	fliph: function(){
+		var img = $("#" + ImgEditor.selectedId)[0];
+		Pixastic.process(img, "fliph");
+		//ImgEditor.reRender();
+
+		$("#" + ImgEditor.selectedId).draggable({
+			stop : function() {
+				ImgEditor.images[ImgEditor.selectedIndex[1]].top = Math.ceil($("#" + ImgEditor.selectedId).position().top) + 'px';
+				ImgEditor.images[ImgEditor.selectedIndex[1]].left = Math.ceil($("#" + ImgEditor.selectedId).position().left) + 'px';
+			}
+		});
+
+		//ImgEditor.reBind();
+
 	},
 	save : function() {
 		$.post(
 			'process_picture.php',
-			{ 
+			{
 				settings : JSON.stringify(ImgEditor.settings, null, ''),
 				images : JSON.stringify(ImgEditor.images, null, '')
 			},
@@ -322,45 +335,43 @@ var ImgEditor = {
 		
 		var Img = $('#pic_' + ImgEditor.i).attr("src",$('#pic_' + ImgEditor.i).attr('src')+ "?" + new Date().getTime());
 				
-		  $(Img).load(function(){
-			  $(this).attr('id','pic_' + ImgEditor.i);
-		  
-			  var data = { 
-				  id :  'pic_' + ImgEditor.i,
-				  height :  this.height, 
-				  width : this.width,
-				  src : this.src,
-				  top : Math.ceil($('#pic_' + ImgEditor.i).position().top) + 'px',
-				  left : Math.ceil($('#pic_' + ImgEditor.i).position().left) + 'px',
-				  angle : 0,
-				  size: 100,
-				  zIndex : 1
-			  };
-			  
-			  ImgEditor.images.push( data );
-			  
-			  ImgEditor.selectedId = 'pic_' + ImgEditor.i;
-			  ImgEditor.selectedIndex[1] = ImgEditor.i;
-			  
-			  ImgEditor.reBind();
-			  
-			  $('#pic_' + ImgEditor.selectedIndex[1]).draggable({ 
-					//containment: "parent", 
+		$(Img).load(function(){
+			$(this).attr('id','pic_' + ImgEditor.i);
+
+			var data = {
+					id :  'pic_' + ImgEditor.i,
+					height : this.height,
+					width : this.width,
+					src : this.src,
+					top : Math.ceil($('#pic_' + ImgEditor.i).position().top) + 'px',
+					left : Math.ceil($('#pic_' + ImgEditor.i).position().left) + 'px',
+					angle : 0,
+					size: 100,
+					zIndex : 1
+			};
+
+			ImgEditor.images.push( data );
+
+			ImgEditor.selectedId = 'pic_' + ImgEditor.i;
+			ImgEditor.selectedIndex[1] = ImgEditor.i;
+
+			ImgEditor.reBind();
+
+			$('#pic_' + ImgEditor.selectedIndex[1]).draggable({
 					stop : function() {
 						ImgEditor.images[ImgEditor.selectedIndex[1]].top = Math.ceil($('#pic_' + ImgEditor.selectedIndex[1]).position().top) + 'px';
 						ImgEditor.images[ImgEditor.selectedIndex[1]].left = Math.ceil($('#pic_' + ImgEditor.selectedIndex[1]).position().left) + 'px';
 					}
-			  });
-			  
-			  
-			  ImgEditor.i++;
+			});
+
+			ImgEditor.i++;
 					
 		});
 	},
 	resetCanvas : function(){
 		ImgEditor.images = [];
 		$('#' +  ImgEditor.settings.editor).html('');
-		if(ImgEditor.settings.frame_pic != ''){
+		if(ImgEditor.settings.frame_pic !== ''){
 			ImgEditor.init.frame();
 		}
 	}
