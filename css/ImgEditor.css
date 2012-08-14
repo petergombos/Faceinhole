@@ -1,0 +1,37 @@
+#tools{
+	background: url(imgeditor/tools_bg.png) no-repeat;
+	width:448px;
+	height:128px;
+	/*position:absolute;
+	top:654px;
+	left:70px;*/
+	z-index:999999;
+	cursor: move;
+}
+
+#tools .ui-widget-content {
+	border:none !important;
+	background:none !important;
+}
+
+
+#tools .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+	background: url(imgeditor/tools_slider_ball.png) no-repeat;
+	padding:6px;
+	border:none;
+	outline:none;
+}
+
+#angle{
+	position: absolute;
+	top: 66px;
+	left: 84px;
+	width: 295px;
+}
+
+#size{
+	position: absolute;
+	top: 21px;
+	left: 84px;
+	width: 295px;
+}
