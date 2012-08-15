@@ -143,7 +143,9 @@ function monkeyPatch_mouseStart() {
                 //If the ddmanager is used for droppables, inform the manager that dragging has started (see #5003)
                // if ( $.ui.ddmanager ) $.ui.ddmanager.dragStart(this, event);
 
-                return true;
+              return true;
+
+              
 
      };
 

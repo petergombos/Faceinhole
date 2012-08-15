@@ -29,6 +29,27 @@ function aasort (&$array, $key) {
     $array=$ret;
 }
 
+function flipHorizontal(&$img) {
+
+	$size_x = imagesx($img);
+	$size_y = imagesy($img);
+
+	$temp = imagecreatetruecolor($size_x, $size_y);
+
+	imagecolortransparent($temp, imagecolorallocate($temp, 0, 0, 0));
+	imagealphablending($temp, false);
+	imagesavealpha($temp, true);
+
+	$x = imagecopyresampled($temp, $img, 0, 0, ($size_x-1), 0, $size_x, $size_y, 0-$size_x, $size_y);
+	if ($x) {
+	    $img = $temp;
+	}
+	else {
+	    die("Unable to flip image");
+	}
+
+}
+
 aasort($images,"zIndex");
 
 //Creating canvas
@@ -60,6 +81,36 @@ foreach($images as $image){
 	file_put_contents('pictures/'.$image_name,$temp_img);
 
 
+	//Flip if needed
+	if($image['fliph'] == true){
+		switch($ext)
+		{
+			  case 'jpg':
+			  case 'jpeg':
+			  case 'JPG':
+			  case 'JPEG':
+				  $img = imagecreatefromjpeg('pictures/'.$image_name) or die('Error rotate file');
+				  flipHorizontal($img);
+				  imagejpeg($img,'pictures/'.$image_name);
+				  break;
+			  // case 'gif':
+				 //  $img = imagecreatefromgif('pictures/'.$image_name) or die('Error rotate file');
+				 //  flipHorizontal($img);
+				 //  imagegif($img,'pictures/'.$image_name);
+				 //  break;
+			  case 'png':
+				  $img = imagecreatefrompng('pictures/'.$image_name) or die('Error rotate file');
+				  flipHorizontal($img);
+				  imagepng($img,'pictures/'.$image_name);
+				  break;
+			  default:
+				  die('This is not a valid Photo File');
+				  break;
+		}
+
+	}
+
+
 	//Resize image if needed
 	if($image['size'] != 100){
 		// *** 1) Initialize / load image
@@ -73,7 +124,7 @@ foreach($images as $image){
 	}
 
 	
-	//Rotate image if needed
+	//TODO FIX this so it dosent have to convert even when not needed!
 	if($image['angle'] != -1){
 		$filename = $tempname.'_'.$i.'.png';
 		$rotang = 360-$image['angle'];
@@ -85,6 +136,7 @@ foreach($images as $image){
 			  case 'JPG':
 			  case 'JPEG':
 				  $source = imagecreatefromjpeg('pictures/'.$image_name) or die('Error rotate file');
+				  unlink('pictures/'.$image_name);
 				  break;
 			  case 'gif':
 				  $source = imagecreatefromgif('pictures/'.$image_name) or die('Error rotate file');
@@ -93,7 +145,7 @@ foreach($images as $image){
 				  $source = imagecreatefrompng('pictures/'.$image_name) or die('Error rotate file');
 				  break;
 			  default:
-				  $img = false;
+				  die('This is not a valid Photo File');
 				  break;
 		}
 		
@@ -105,10 +157,11 @@ foreach($images as $image){
 		imagesavealpha($rotation, true);
 	
 		imagepng($rotation,'pictures/'.$filename);
+
 		imagedestroy($source);
 		imagedestroy($rotation);
 		
-		unlink('pictures/'.$image_name);
+		
 		$image_name = $filename;
 	}
 	

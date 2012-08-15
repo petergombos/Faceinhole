@@ -28,7 +28,7 @@
                 canvas_height : '400px',
                 canvas_width : '400px',
                 background_pic : '', //'img/bg.jpg',
-                frame_pic : '',//'img/frame1.png',
+                frame_pic : '', //'img/frame1.png',
                 frame_height : '400px',
                 frame_width : '400px',
                 onSave_callback : function(response){console.log('saved > ' + response) } // Function called aftes image saved

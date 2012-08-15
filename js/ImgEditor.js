@@ -1,5 +1,5 @@
 /* 
-Copyright: Kriek Media Kft.
+Copyright: Kriek Media Ltd.
 Author: Peter Gombos
 
 Dependencies:
@@ -31,7 +31,6 @@ $(document).ready(function(){
 	ImgEditor.init.tools();
 	ImgEditor.init.frame();
 });
-
 */
 
 var ImgEditor = {
@@ -304,7 +303,8 @@ var ImgEditor = {
 	fliph: function(){
 		var img = $("#" + ImgEditor.selectedId)[0];
 		Pixastic.process(img, "fliph");
-		//ImgEditor.reRender();
+
+		ImgEditor.images[ImgEditor.selectedIndex[1]].fliph = !ImgEditor.images[ImgEditor.selectedIndex[1]].fliph;
 
 		$("#" + ImgEditor.selectedId).draggable({
 			stop : function() {
@@ -313,7 +313,7 @@ var ImgEditor = {
 			}
 		});
 
-		//ImgEditor.reBind();
+		ImgEditor.reBind();
 
 	},
 	save : function() {
