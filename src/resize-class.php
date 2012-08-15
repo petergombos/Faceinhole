@@ -74,8 +74,11 @@
 
 				// *** Resample - create image canvas of x, y size
 				$this->imageResized = imagecreatetruecolor($optimalWidth, $optimalHeight);
+				imagecolortransparent($this->imageResized, imagecolorallocate($this->imageResized, 0, 0, 0));
+				imagealphablending($this->imageResized, false);
+				imagesavealpha($this->imageResized, true);
 				imagecopyresampled($this->imageResized, $this->image, 0, 0, 0, 0, $optimalWidth, $optimalHeight, $this->width, $this->height);
-
+				
 
 				// *** if option is 'crop', then crop too
 				if ($option == 'crop') {
@@ -232,6 +235,7 @@
 						$invertScaleQuality = 9 - $scaleQuality;
 
 						if (imagetypes() & IMG_PNG) {
+
 							 imagepng($this->imageResized, $savePath, $invertScaleQuality);
 						}
 						break;
