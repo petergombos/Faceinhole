@@ -47,7 +47,7 @@ var ImgEditor = {
 	init : {
 		canvas : function(){
 			var trasparent_class = ".transparent { zoom: 1; filter: alpha(opacity=30); opacity: 0.3; z-index:9999 !important; }";
-			var editor_style = "#editor{padding:0px;position:relative;overflow:hidden; height:" + ImgEditor.settings.canvas_height + "; width:" + ImgEditor.settings.canvas_width + '; } #editor img{position:absolute;}';
+			var editor_style = "#editor{padding:0px;position:relative;overflow:hidden; height:" + ImgEditor.settings.canvas_height + "; width:" + ImgEditor.settings.canvas_width + '; } #editor img,#editor canvas{position:absolute;}';
 			$('<style>' + trasparent_class + editor_style  +'</style>').appendTo('head');
 		},
 		images : function(){
